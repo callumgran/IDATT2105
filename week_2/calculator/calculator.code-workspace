@@ -12,7 +12,7 @@
       "**/coverage": true
     },
     "editor.formatOnSave": true,
-    "eslint.validate": ["html", "javascript", "typescript"],
+    "eslint.validate": ["html", "vue", "javascriptreact", "javascript", "typescript"],
     "editor.codeActionsOnSave": { "source.fixAll.eslint": true }
   },
   "extensions": {
