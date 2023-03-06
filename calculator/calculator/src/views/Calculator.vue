@@ -22,16 +22,17 @@
     <button @click="equals()" class="btn operator" data-testid="equals">=</button>
   </div>
   <div id="log">
-    <div id="log_title">Latest calculations</div>
+    <div id="log_title">Latest calculations for {{ store.state.username }}</div>
     <div v-bind:key="item" v-for="item in log">
       {{ item }}
     </div>
+    <button v-if="page < pages" id="load_more" @click="loadPage()">Load more</button>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { calculate, getHistory } from '../api/api';
+import { calculate, getHistory, getHistoryPage } from '../api/api';
 import { useStore } from 'vuex';
 
 export default defineComponent({
@@ -41,6 +42,8 @@ export default defineComponent({
       prev: '0' as string,
       ans: '0' as string,
       disp: '0' as string,
+      page: 0 as number,
+      pages: 0 as number,
       operation: '' as string,
       log: [] as Array<string>,
       store: useStore(),
@@ -66,7 +69,8 @@ export default defineComponent({
         const response = await calculate(this.store.state.token, this.curr);
         this.ans = JSON.parse(response.result);
         this.disp = this.ans;
-        // this.addToLog();
+        this.log.unshift(`${this.curr} = ${this.ans}`);
+        if (this.log.length > 10 && this.page < this.pages) this.log.pop();
         this.curr = '0';
         this.operation = '';
       }
@@ -81,18 +85,27 @@ export default defineComponent({
       else this.curr = `${this.curr}${this.disp} ${operator} `;
       this.disp = '0';
     },
-    // addToLog() {
-    //   if (this.log.length < 10) this.log[this.log.length] = `${this.curr} = ${this.ans}`;
-    //   this.log = this.log.map((_, i, a) => a[(i + a.length - 1) % a.length]);
-    //   if (this.log.length >= 10) this.log[0] = `${this.curr} = ${this.ans}`;
-    // },
+    async createLog() {
+      let data = await getHistory(this.store.state.token);
+      if (data.history !== undefined) {
+        for (let i = data.history.length - 1; i >= 0; i--) {
+          this.log.push(`${data.history[i].equation} = ${data.history[i].result}`);
+        }
+      }
+      this.pages = data.pages as number;
+    },
+    async loadPage() {
+      this.page++;
+      let data = await getHistoryPage(this.store.state.token, this.page);
+      if (data !== undefined) {
+        for (let i = 0; i < data.length; i++) {
+          this.log.push(`${data[i].equation} = ${data[i].result}`);
+        }
+      }
+    },
   },
-  async created() {
-    let data = await getHistory(this.store.state.token);
-
-    for (let i = data.length - 1; i >= 0; i--) {
-      this.log.push(`${data[i].equation} = ${data[i].result}`);
-    }
+  created() {
+    this.createLog();
   },
 });
 </script>
@@ -151,6 +164,10 @@ export default defineComponent({
 }
 
 .operator {
+  background: #0ec58e;
+}
+
+#load_more {
   background: #0ec58e;
 }
 </style>

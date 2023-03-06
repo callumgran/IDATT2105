@@ -23,6 +23,12 @@
       <div data-testid="alreadyExists" v-if="alreadyExists" id="alreadyExists">
         <p style="color: red">Register failed, username is already taken.</p>
       </div>
+      <div data-testid="badPassword" v-if="badPassword" id="badPassword">
+        <p style="color: red">
+          Register failed, password must be at least 8 characters long, <br />
+          have 1 uppercase letter and 1 number.
+        </p>
+      </div>
     </form>
   </div>
 </template>
@@ -110,14 +116,21 @@ export default {
     const rPassword = ref('');
     const wrongInput = ref(false);
     const alreadyExists = ref(false);
+    const badPassword = ref(false);
     const store = useStore();
     const router = useRouter();
+    const regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$');
 
     const register = async () => {
       wrongInput.value = false;
       alreadyExists.value = false;
       if (password.value !== rPassword.value) {
         wrongInput.value = true;
+        return;
+      }
+
+      if (!regex.test(password.value)) {
+        badPassword.value = true;
         return;
       }
 
@@ -135,6 +148,7 @@ export default {
       username,
       password,
       rPassword,
+      badPassword,
       wrongInput,
       alreadyExists,
       register,

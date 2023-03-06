@@ -58,3 +58,17 @@ export const getHistory = async (token: string) => {
         }
     );
 }
+
+export const getHistoryPage = async (token: string, page: number) => {
+    return axios.get(`${BASE_API_URL}/calculate/${page}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+    }).then((response) => {
+            return response.data;
+    }).catch(
+        (error) => {
+            console.warn(error);
+        }
+    );
+}

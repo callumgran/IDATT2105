@@ -2,7 +2,6 @@
   <div>
     <nav>
       <h1>Calculator App</h1>
-      <div id="welcome" v-if="loggedIn">Welcome {{ store.state.username }}</div>
       <div>
         <router-link v-if="loggedIn" to="calculator"> Calculator </router-link>
         <router-link to="contact"> Contact </router-link>
@@ -56,9 +55,6 @@ nav {
 nav h1 {
   margin-right: auto;
   margin-bottom: 0;
-}
-#welcome {
-  margin-right: 16px;
 }
 nav a {
   margin-left: 16px;
