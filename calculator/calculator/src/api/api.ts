@@ -46,7 +46,7 @@ export const calculate = async (token: string, equation: string) => {
 }
 
 export const getHistory = async (token: string) => {
-    return await axios.get(`${BASE_API_URL}/calculate`, {
+    return axios.get(`${BASE_API_URL}/calculate`, {
         headers: {
             Authorization: `Bearer ${token}`
         },

@@ -4,7 +4,6 @@
       <h1>Calculator App</h1>
       <div id="welcome" v-if="loggedIn">Welcome {{ store.state.username }}</div>
       <div>
-        <router-link to="/">Home</router-link>
         <router-link v-if="loggedIn" to="calculator"> Calculator </router-link>
         <router-link to="contact"> Contact </router-link>
         <router-link v-if="!loggedIn" to="login"> Login </router-link>
@@ -38,7 +37,6 @@ export default {
       store.commit('setUsername', '');
       storage.removeStorageSync('token');
       storage.removeStorageSync('username');
-      router.push({ name: 'Home' });
     };
 
     return {

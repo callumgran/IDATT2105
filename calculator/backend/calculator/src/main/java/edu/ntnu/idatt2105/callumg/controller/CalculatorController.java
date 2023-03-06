@@ -1,9 +1,13 @@
 package edu.ntnu.idatt2105.callumg.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,6 +45,7 @@ public class CalculatorController {
     private ResultData equationToDto(Equation equation) {
         ResultData dto = new ResultData();
         dto.setResult(equation.getResult());
+        dto.setEquation(equation.getEquation());
         return dto;
     }
 
@@ -71,4 +76,19 @@ public class CalculatorController {
         
         return new ResponseEntity<>(resultDto, HttpStatus.OK);
     }
+
+    @GetMapping(value = "/calculate", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<List<ResultData>> getCalculations(HttpServletRequest request) {
+        User user = userRepository.findByUsername(jwtService.extractUsername(request.getHeader("Authorization").substring(7))).orElseThrow();
+
+        List<ResultData> resultDtos = new ArrayList<>();
+
+        for (Equation equation : user.getEquations()) {
+            resultDtos.add(equationToDto(equation));
+        }
+
+        return new ResponseEntity<>(resultDtos, HttpStatus.OK);
+    }
+    
 }

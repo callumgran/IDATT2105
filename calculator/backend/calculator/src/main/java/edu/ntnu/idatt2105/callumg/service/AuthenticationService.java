@@ -32,7 +32,8 @@ public class AuthenticationService {
                     .password(passwordEncoder.encode(request.getPassword()))
                     .role(Role.USER)
                     .build();
-
+        if (userRepository.findByUsername(request.getUsername()).isPresent())
+            throw new IllegalStateException("Username already exists");
         userRepository.save(user);
 
         String jwtToken = jwtService.generateToken(user);

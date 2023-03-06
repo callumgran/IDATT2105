@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { calculate } from '../api/api';
+import { calculate, getHistory } from '../api/api';
 import { useStore } from 'vuex';
 
 export default defineComponent({
@@ -66,7 +66,7 @@ export default defineComponent({
         const response = await calculate(this.store.state.token, this.curr);
         this.ans = JSON.parse(response.result);
         this.disp = this.ans;
-        this.addToLog();
+        // this.addToLog();
         this.curr = '0';
         this.operation = '';
       }
@@ -81,23 +81,23 @@ export default defineComponent({
       else this.curr = `${this.curr}${this.disp} ${operator} `;
       this.disp = '0';
     },
-    addToLog() {
-      if (this.log.length < 10) this.log[this.log.length] = `${this.curr} = ${this.ans}`;
-      this.log = this.log.map((_, i, a) => a[(i + a.length - 1) % a.length]);
-      if (this.log.length >= 10) this.log[0] = `${this.curr} = ${this.ans}`;
-    },
+    // addToLog() {
+    //   if (this.log.length < 10) this.log[this.log.length] = `${this.curr} = ${this.ans}`;
+    //   this.log = this.log.map((_, i, a) => a[(i + a.length - 1) % a.length]);
+    //   if (this.log.length >= 10) this.log[0] = `${this.curr} = ${this.ans}`;
+    // },
+  },
+  async created() {
+    let data = await getHistory(this.store.state.token);
+
+    for (let i = data.length - 1; i >= 0; i--) {
+      this.log.push(`${data[i].equation} = ${data[i].result}`);
+    }
   },
 });
 </script>
 
 <style scoped>
-@font-face {
-  font-family: 'Roboto';
-  src: url('roboto.eot');
-  src: url('roboto.eot?#iefix') format('embedded-opentype'), url('roboto.woff') format('woff'),
-    url('roboto.ttf') format('truetype'), url('roboto.svg#svgFontName') format('svg');
-}
-
 #log {
   border: 3px solid black;
   border-radius: 10px;

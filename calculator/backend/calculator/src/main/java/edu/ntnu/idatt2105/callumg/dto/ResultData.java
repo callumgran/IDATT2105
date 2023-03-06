@@ -5,5 +5,7 @@ import lombok.Data;
 @Data
 public class ResultData {
     
+    private String equation;
+    
     private double result;
 }
