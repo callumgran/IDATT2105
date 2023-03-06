@@ -1,15 +1,16 @@
 package edu.ntnu.idatt2105.callumg.service;
 
-import edu.ntnu.idatt2105.callumg.model.Expression;
+import edu.ntnu.idatt2105.callumg.model.Equation;
 
-public class CalculatorService {
+public class CalculatorServiceImpl implements CalculatorService {
     
-    public double calculate(Expression expression) {
-        double result = expression.getOperands().get(0);
-        for (int i = 1; i < expression.getOperands().size(); i++) {
-            result = operate(result, expression.getOperands().get(i), expression.getOperators().get(i - 1));
+    @Override
+    public void calculate(Equation equation) {
+        double result = equation.getOperands().get(0);
+        for (int i = 1; i < equation.getOperands().size(); i++) {
+            result = operate(result, equation.getOperands().get(i), equation.getOperators().get(i - 1));
         }
-        return result;
+        equation.setResult(result);
     }
 
     public double operate(double operand1, double operand2, char operator) {

@@ -4,8 +4,11 @@ import io.micrometer.common.lang.NonNull;
 import lombok.Data;
 
 @Data
-public class ExpressionData {
+public class EquationData {
 
     @NonNull
-    private String expression;
+    private String username;
+
+    @NonNull
+    private String equation;
 }

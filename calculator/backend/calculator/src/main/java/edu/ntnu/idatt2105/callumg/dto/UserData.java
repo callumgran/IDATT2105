@@ -1,7 +1,6 @@
 package edu.ntnu.idatt2105.callumg.dto;
 
-import edu.ntnu.idatt2105.callumg.model.Calculation;
-
+import edu.ntnu.idatt2105.callumg.model.Equation;
 import lombok.Data;
 import java.util.List;
 
@@ -12,5 +11,5 @@ public class UserData {
 
     private String password;
     
-    private List<Calculation> calculations;
+    private List<Equation> calculations;
 }
