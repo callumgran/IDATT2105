@@ -4,7 +4,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,18 +16,20 @@ import edu.ntnu.idatt2105.callumg.model.Equation;
 import edu.ntnu.idatt2105.callumg.model.User;
 import edu.ntnu.idatt2105.callumg.repository.UserRepository;
 import edu.ntnu.idatt2105.callumg.service.CalculatorServiceImpl;
+import edu.ntnu.idatt2105.callumg.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-@CrossOrigin("*")
 public class CalculatorController {
 
     private static final Logger LOGGER = org.apache.logging.log4j.LogManager.getLogger(CalculatorController.class); 
 
     private final UserRepository userRepository;
+
+    private final JwtService jwtService;
 
     private Equation dtoToEquation(EquationData dto) {
         Equation equation = new Equation(dto.getEquation());
@@ -60,7 +61,7 @@ public class CalculatorController {
 
         LOGGER.info("Result: " + equation.getResult());
 
-        User user = userRepository.findByUsername(dto.getUsername()).orElseThrow();
+        User user = userRepository.findByUsername(jwtService.extractUsername(request.getHeader("Authorization").substring(7))).orElseThrow();
 
         user.addEquation(equation);
 

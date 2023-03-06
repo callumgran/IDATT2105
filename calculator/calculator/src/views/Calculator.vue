@@ -31,7 +31,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import axios from 'axios';
+import { calculate } from '../api/api';
+import { useStore } from 'vuex';
 
 export default defineComponent({
   data() {
@@ -42,6 +43,7 @@ export default defineComponent({
       disp: '0' as string,
       operation: '' as string,
       log: [] as Array<string>,
+      store: useStore(),
     };
   },
   methods: {
@@ -61,20 +63,12 @@ export default defineComponent({
     async equals() {
       if (this.operation !== '') {
         this.curr = `${this.curr}${this.disp}`;
-        await axios
-          .post('http://localhost:8080/calculate', {
-            expression: this.curr,
-          })
-          .then((response) => {
-            this.ans = response.data;
-            this.disp = this.ans;
-            this.addToLog();
-            this.curr = '0';
-            this.operation = '';
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+        const response = await calculate(this.store.state.token, this.curr);
+        this.ans = JSON.parse(response.result);
+        this.disp = this.ans;
+        this.addToLog();
+        this.curr = '0';
+        this.operation = '';
       }
     },
     addNumber(number: number) {

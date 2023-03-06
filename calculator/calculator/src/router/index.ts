@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory  } from 'vue-router';
 import Calculator from '../views/Calculator.vue';
 import ContactFormVue from '../components/ContactForm.vue';
+import LoginForm from '../components/LoginForm.vue';
+import RegisterForm from '../components/RegisterForm.vue';
 
 const routes = [
     {
@@ -12,6 +14,16 @@ const routes = [
         path: '/contact',
         name: 'ContactForm',
         component: ContactFormVue,
+    },
+    {
+        path: '/login',
+        name: 'Login',
+        component: LoginForm,
+    },
+    {
+        path: '/register',
+        name: 'Register',
+        component: RegisterForm,
     },
 ];
 

@@ -12,7 +12,6 @@ import edu.ntnu.idatt2105.callumg.model.Role;
 import edu.ntnu.idatt2105.callumg.model.User;
 import edu.ntnu.idatt2105.callumg.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.var;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +26,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
-        var user = User
+        User user = User
                     .builder()
                     .username(request.getUsername())
                     .password(passwordEncoder.encode(request.getPassword()))
@@ -36,7 +35,7 @@ public class AuthenticationService {
 
         userRepository.save(user);
 
-        var jwtToken = jwtService.generateToken(user);
+        String jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse
             .builder()
             .token(jwtToken)
@@ -51,9 +50,9 @@ public class AuthenticationService {
             )
         );
 
-        var user = userRepository.findByUsername(request.getUsername()).orElseThrow();
+        User user = userRepository.findByUsername(request.getUsername()).orElseThrow();
 
-        var jwtToken = jwtService.generateToken(user);
+        String jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse
             .builder()
             .token(jwtToken)

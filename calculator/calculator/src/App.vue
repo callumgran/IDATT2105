@@ -2,6 +2,8 @@
 import Calculator from './views/Calculator.vue';
 import NavBar from './components/NavBar.vue';
 import ContactForm from './components/ContactForm.vue';
+import { useStore } from 'vuex';
+import { useStorage } from 'vue3-storage';
 
 export default {
   name: 'app',
@@ -9,6 +11,15 @@ export default {
     Calculator,
     ContactForm,
     NavBar,
+  },
+
+  setup() {
+    const store = useStore();
+    const storage = useStorage();
+    if (storage.getStorageSync('token') !== undefined) {
+      store.commit('setToken', storage.getStorageSync('token'));
+      store.commit('setUsername', storage.getStorageSync('username'));
+    }
   },
 };
 </script>

@@ -7,8 +7,5 @@ import lombok.Data;
 public class EquationData {
 
     @NonNull
-    private String username;
-
-    @NonNull
     private String equation;
 }
